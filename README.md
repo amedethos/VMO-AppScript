@@ -25,7 +25,7 @@ acortado de link y envío por WhatsApp (Twilio) a los destinatarios fijos.
 - `Setup.gs` — prepara la estructura del sheet: `prepararHojaActual()` (container-bound) o `crearSheetNuevo()` (standalone), más `sembrarSinNotificar()`.
 - `Ingesta.gs` — **función principal** `actualizarNotasVicente()`: lee RSS, agrega A:F y notifica cada nota nueva.
 - `Notificador.gs` — TinyURL + Twilio, idempotencia por columna H, `reintentarPendientes()`, `pruebaEnvio()`.
-- `Activacion.gs` — **plantilla diaria** `enviarActivacionDiaria()` + envío por ContentSid + `pruebaActivacion()`.
+- `Activacion.gs` — activación **local deshabilitada**; lo diario lo hace el hub `ActivacionAlertasWhatsApp`.
 - `Secretos.gs` — lectura de credenciales desde Script Properties.
 - `Disparadores.gs` — instalar/eliminar triggers.
 - `appsscript.json` — manifest (zona horaria `America/Mexico_City`, runtime V8).
@@ -58,7 +58,8 @@ acortado de link y envío por WhatsApp (Twilio) a los destinatarios fijos.
    correcta (por defecto reusa `activacionserviciodealertas`).
 8. **Automatiza:**
    - `instalarTriggerIngesta()` — ingesta + noticias, cada 15 min.
-   - `instalarTriggerActivacionDiaria()` — plantilla diaria a las 8:00 (México).
+   - ~~`instalarTriggerActivacionDiaria()`~~ — **ya no**: usar hub `ActivacionAlertasWhatsApp`.
+     Ejecuta `eliminarTriggerActivacionDiaria()` una vez para quitar el trigger viejo.
    - `instalarTriggerReintento()` — opcional, cada hora, recupera PENDIENTES.
 9. **Apaga el escenario de Make.**
 
@@ -90,13 +91,10 @@ WhatsApp solo entrega texto libre si la ventana de 24 h del destinatario está
 abierta, y esa ventana se abre cuando la persona **responde** a un mensaje del
 negocio.
 
-Por eso está el módulo **`Activacion.gs`**:
-
-- `enviarActivacionDiaria()` manda una **plantilla aprobada** cada mañana
-  (trigger a las 8:00 México). Las plantillas **sí se entregan** aunque la
-  ventana esté cerrada.
-- La persona **responde una vez** a esa plantilla → se abre su ventana de 24 h
-  → las noticias del día le entran.
+Por eso la activación diaria está en el hub **`ActivacionAlertasWhatsApp`**
+(un mensaje por teléfono, compartido entre Mota / Mery / VMO). En este proyecto
+`CONFIG.ACTIVACION.ENABLED = false` y el módulo `Activacion.gs` queda solo para
+emergencia local.
 
 **Importante:** la plantilla llega sola, pero la ventana la abre la *respuesta*
 del destinatario, no el simple envío de la plantilla. Es decir, se elimina el

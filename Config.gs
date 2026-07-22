@@ -59,19 +59,14 @@ var CONFIG = {
     MESSAGING_SERVICE_SID: 'MG405f1b841492e8ee5d2b5ee51855afd4',
   },
 
-  // --- Activación diaria (plantilla aprobada de WhatsApp) -----------------
-  // La plantilla LLEGA sola aunque la ventana de 24 h esté cerrada. Sirve para
-  // que el destinatario responda una vez al día y así abrir su ventana, para
-  // que las noticias (texto libre) le puedan entrar ese día.
+  // --- Activación diaria -------------------------------------------------
+  // CENTRALIZADA en el proyecto ActivacionAlertasWhatsApp (hub).
+  // Aquí queda DISABLED para no duplicar el mensaje si el contacto también
+  // recibe Mota-Engil / Mery Pozos. Las noticias de VMO siguen igual.
   ACTIVACION: {
-    ENABLED: true,
-    // Content SID de la plantilla aprobada en Twilio.
-    // Por defecto reusa "activacionserviciodealertas" (misma cuenta Twilio).
-    // CONFÍRMALO / reemplázalo si tienes una plantilla propia de VMO.
+    ENABLED: false, // true solo en emergencia local; lo normal es el hub
     CONTENT_SID: 'HX33eb5d99fbeb564bc3de1bed200318a8',
-    // Variables de la plantilla, si tuviera. Ej: {"1": "Nombre"}. Vacío = sin variables.
     CONTENT_VARIABLES: {},
-    // Hora local (America/Mexico_City) del disparador diario.
     HORA_ENVIO: 8,
   },
 

@@ -33,21 +33,35 @@ function eliminarTriggerReintento() {
   eliminarTriggersPorFuncion_('reintentarPendientes');
 }
 
-// Envía la plantilla de activación cada día a CONFIG.ACTIVACION.HORA_ENVIO
-// (hora local del manifest: America/Mexico_City).
+// Activación diaria: usar el hub ActivacionAlertasWhatsApp.
+// Esta función ya NO instala trigger local (evita mensajes duplicados).
 function instalarTriggerActivacionDiaria() {
+  eliminarTriggerActivacionDiaria();
+  Logger.log('NO se instala activación local. Usa el hub ActivacionAlertasWhatsApp. ' +
+             'Si necesitas emergencia local, pon CONFIG.ACTIVACION.ENABLED=true y ' +
+             'reinstala a mano con instalarTriggerActivacionDiariaLegacy_().');
+}
+
+/** Solo emergencia: reinstala trigger local si ENABLED=true. */
+function instalarTriggerActivacionDiariaLegacy_() {
+  if (!CONFIG.ACTIVACION.ENABLED) {
+    Logger.log('CONFIG.ACTIVACION.ENABLED=false; no se instala.');
+    return;
+  }
   eliminarTriggerActivacionDiaria();
   ScriptApp.newTrigger('enviarActivacionDiaria')
     .timeBased()
     .everyDays(1)
     .atHour(CONFIG.ACTIVACION.HORA_ENVIO)
     .create();
-  Logger.log('Trigger de activación diaria instalado a las ' +
-             CONFIG.ACTIVACION.HORA_ENVIO + ':00.');
+  Logger.log('Trigger LOCAL de activación instalado a las ' +
+             CONFIG.ACTIVACION.HORA_ENVIO + ':00 (emergencia).');
 }
 
+/** Ejecutar UNA vez tras desplegar el hub para quitar el trigger viejo. */
 function eliminarTriggerActivacionDiaria() {
   eliminarTriggersPorFuncion_('enviarActivacionDiaria');
+  Logger.log('Trigger local enviarActivacionDiaria eliminado (si existía).');
 }
 
 function eliminarTriggersPorFuncion_(fnName) {

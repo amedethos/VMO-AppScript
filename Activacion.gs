@@ -1,15 +1,11 @@
 /**
  * ============================================================================
- *  Activacion.gs  ·  Envía la plantilla aprobada de WhatsApp a los
- *                    destinatarios fijos, todos los días a la hora configurada.
+ *  Activacion.gs  ·  Activación LOCAL (deshabilitada por defecto).
  *
- *  Por qué existe: las noticias van como TEXTO LIBRE y WhatsApp solo las
- *  entrega si la ventana de 24 h del destinatario está abierta. Esa ventana
- *  se abre cuando la persona RESPONDE a un mensaje del negocio. La plantilla
- *  aprobada SÍ se entrega aunque la ventana esté cerrada, así que la mandamos
- *  cada mañana para que la persona responda una vez y quede abierta el día.
- *
- *  (No usa hoja de suscriptores: manda a los mismos CONFIG.RECIPIENTS.)
+ *  La activación diaria quedó centralizada en ActivacionAlertasWhatsApp.
+ *  CONFIG.ACTIVACION.ENABLED = false → enviarActivacionDiaria() no envía.
+ *  Se conserva el código por si hace falta una prueba/emergencia puntual.
+ *  Las noticias (texto libre) NO se ven afectadas.
  * ============================================================================
  */
 
